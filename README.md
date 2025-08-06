@@ -1,36 +1,168 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Urgency - ER vs Urgent Care Predictor 🏥🤖
 
-## Getting Started
+A modern web application built with Next.js that helps users determine whether their symptoms are better suited for an **Emergency Room (ER)** or **Urgent Care** visit.
 
-First, run the development server:
+This project is currently in development and is being built for educational and exploratory use only. It is **not intended for clinical decision-making**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 📌 Overview
+
+Urgency is a user-friendly web application that guides users through a symptom assessment process to provide recommendations on whether to visit the ER or Urgent Care. The application features:
+
+- **Interactive Symptom Checker**: Multi-step assessment process
+- **Severity Rating**: Slider-based severity assessment for each symptom
+- **Critical Flags**: Yes/no questions for emergency indicators
+- **Smart Recommendations**: AI-powered care recommendations
+- **Modern UI**: Clean, responsive design with TailwindCSS
+- **Mobile Optimized**: Works seamlessly on all devices
+
+---
+
+## 🚀 Live Demo
+
+Visit the application at: [Coming Soon - Deploy to Vercel]
+
+---
+
+## 🛠️ Tech Stack
+
+| Component       | Technology                    |
+|----------------|-------------------------------|
+| Frontend       | Next.js 15 + TypeScript       |
+| Styling        | TailwindCSS                   |
+| State Management| React Context API             |
+| UI Components  | Custom React Components       |
+| Deployment     | Vercel (planned)              |
+
+---
+
+## 📱 Features
+
+### 1. **Landing Page**
+- Hero section with clear value proposition
+- Call-to-action to start symptom assessment
+- Professional branding and design
+
+### 2. **Symptom Assessment Flow**
+- **Step 1**: Select symptoms from predefined list
+- **Step 2**: Rate severity for each selected symptom (1-10 scale)
+- **Step 3**: Answer critical emergency questions
+- **Step 4**: Receive personalized recommendation
+
+### 3. **Results Page**
+- Clear ER vs Urgent Care recommendation
+- Detailed reasoning for the recommendation
+- Confidence level indicator
+- Option to retake assessment
+- Share results functionality
+
+### 4. **Additional Pages**
+- **About**: Project mission and how it works
+- **Contact**: Developer information
+- **Legal Pages**: Terms, Privacy Policy, Medical Disclaimer
+
+---
+
+## 🏃‍♂️ Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/muhanadk13/er-urgentcare-predictor.git
+   cd er-urgentcare-predictor
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📁 Project Structure
+
+```
+urgency-app/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── page.tsx           # Landing page
+│   │   ├── check/             # Symptom assessment flow
+│   │   ├── result/            # Results page
+│   │   ├── about/             # About page
+│   │   ├── contact/           # Contact page
+│   │   ├── terms/             # Terms of use
+│   │   ├── privacy/           # Privacy policy
+│   │   └── disclaimer/        # Medical disclaimer
+│   ├── components/            # Reusable React components
+│   ├── context/               # React Context for state management
+│   └── api/                   # API routes
+├── public/
+│   └── images/                # Static images
+└── tailwind.config.ts         # TailwindCSS configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Symptom Selection**: Users select from a curated list of common symptoms
+2. **Severity Assessment**: Each symptom is rated on a 1-10 scale
+3. **Critical Evaluation**: Emergency flags are assessed through yes/no questions
+4. **AI Analysis**: A decision tree algorithm processes the inputs
+5. **Recommendation**: Clear guidance on ER vs Urgent Care is provided
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔒 Important Disclaimers
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Not Medical Advice**: This tool is for educational purposes only
+- **No Clinical Decision Making**: Always consult healthcare professionals
+- **Emergency Situations**: Call 911 for life-threatening emergencies
+- **Data Privacy**: No personal health data is stored or transmitted
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🚧 Development Status
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ **Frontend Complete**: Full Next.js application with all pages
+- ✅ **UI/UX**: Modern, responsive design implemented
+- ✅ **Assessment Flow**: Complete symptom checker workflow
+- ✅ **Legal Pages**: Terms, privacy, and disclaimers added
+- 🔄 **Backend Integration**: API endpoints ready for ML model integration
+- 🔄 **Deployment**: Ready for Vercel deployment
+- 🔄 **ML Model**: Decision tree logic implemented (simplified version)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🤝 Contributing
+
+This project is currently in active development. For collaboration, feedback, or questions about medical AI ethics, please contact the developer.
+
+---
+
+## 📬 Contact
+
+**Muhanad Khleifat**  
+📧 [muhanadkhleifat@gmail.com](mailto:muhanadkhleifat@gmail.com)  
+📱 (414) 243-0868  
+🔗 [linkedin.com/in/muhanadk](https://linkedin.com/in/muhanadk)
+
+---
+
+## 📄 License
+
+This project is for educational purposes. Please see the Terms of Use and Medical Disclaimer pages for important legal information.
