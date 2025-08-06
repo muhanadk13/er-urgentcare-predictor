@@ -50,6 +50,7 @@ export default function CriticalFlags() {
       
       const result = await callPredictionAPI({
         symptoms: state.symptoms,
+        symptomDetails: state.symptomDetails,
         severity: state.severity,
         criticalFlags: state.criticalFlags
       });
@@ -93,7 +94,7 @@ export default function CriticalFlags() {
         <div className="bg-white rounded-lg shadow-lg p-8">
           {/* Progress Indicator */}
           <div className="text-center mb-8">
-            <span className="text-sm text-gray-500 font-medium">Step 3 of 3</span>
+            <span className="text-sm text-gray-500 font-medium">Step 2 of 2</span>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div className="bg-urgency-blue h-2 rounded-full w-full transition-all duration-300"></div>
             </div>

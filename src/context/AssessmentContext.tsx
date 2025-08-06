@@ -1,10 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import { SymptomDetails } from '@/components/DetailedSymptomChip';
 
 // Types
 export interface AssessmentState {
   symptoms: string[];
+  symptomDetails: Record<string, SymptomDetails>;
   severity: Record<string, number>;
   criticalFlags: Record<string, boolean>;
   recommendation: 'ER' | 'URGENT_CARE' | null;
@@ -18,11 +20,13 @@ type AssessmentAction =
   | { type: 'SET_SEVERITY'; payload: { symptom: string; value: number } }
   | { type: 'SET_CRITICAL_FLAG'; payload: { flag: string; value: boolean } }
   | { type: 'SET_RECOMMENDATION'; payload: { recommendation: 'ER' | 'URGENT_CARE'; reasons: string[] } }
+  | { type: 'SET_SYMPTOM_DETAILS'; payload: { symptom: string; details: SymptomDetails } }
   | { type: 'RESET_ASSESSMENT' };
 
 // Initial state
 const initialState: AssessmentState = {
   symptoms: [],
+  symptomDetails: {},
   severity: {},
   criticalFlags: {},
   recommendation: null,
@@ -42,6 +46,9 @@ function assessmentReducer(state: AssessmentState, action: AssessmentAction): As
       return {
         ...state,
         symptoms: state.symptoms.filter(symptom => symptom !== action.payload),
+        symptomDetails: Object.fromEntries(
+          Object.entries(state.symptomDetails).filter(([key]) => key !== action.payload)
+        ),
         severity: Object.fromEntries(
           Object.entries(state.severity).filter(([key]) => key !== action.payload)
         ),
@@ -51,6 +58,7 @@ function assessmentReducer(state: AssessmentState, action: AssessmentAction): As
       return {
         ...state,
         symptoms: [],
+        symptomDetails: {},
         severity: {},
       };
     
@@ -69,6 +77,15 @@ function assessmentReducer(state: AssessmentState, action: AssessmentAction): As
         criticalFlags: {
           ...state.criticalFlags,
           [action.payload.flag]: action.payload.value,
+        },
+      };
+    
+    case 'SET_SYMPTOM_DETAILS':
+      return {
+        ...state,
+        symptomDetails: {
+          ...state.symptomDetails,
+          [action.payload.symptom]: action.payload.details,
         },
       };
     
@@ -121,6 +138,10 @@ export const assessmentHelpers = {
     } else {
       dispatch({ type: 'ADD_SYMPTOM', payload: symptom });
     }
+  },
+  
+  setSymptomDetails: (dispatch: React.Dispatch<AssessmentAction>, symptom: string, details: SymptomDetails) => {
+    dispatch({ type: 'SET_SYMPTOM_DETAILS', payload: { symptom, details } });
   },
   
   setSeverity: (dispatch: React.Dispatch<AssessmentAction>, symptom: string, value: number) => {

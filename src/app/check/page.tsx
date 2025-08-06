@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAssessment, assessmentHelpers } from '@/context/AssessmentContext';
-import SymptomChip from '@/components/SymptomChip';
+import DetailedSymptomChip, { SymptomDetails } from '@/components/DetailedSymptomChip';
 
 const availableSymptoms = [
   'Chest Pain',
@@ -38,13 +38,17 @@ export default function SymptomSelection() {
     assessmentHelpers.toggleSymptom(dispatch, symptom, isSelected);
   };
 
+  const handleSymptomDetailsChange = (symptom: string, details: SymptomDetails) => {
+    assessmentHelpers.setSymptomDetails(dispatch, symptom, details);
+  };
+
   const handleNext = async () => {
     if (state.symptoms.length === 0) return;
     
     setIsLoading(true);
     // Small delay for better UX
     await new Promise(resolve => setTimeout(resolve, 300));
-    router.push('/check/severity');
+    router.push('/check/critical');
   };
 
   return (
@@ -53,9 +57,9 @@ export default function SymptomSelection() {
         <div className="bg-white rounded-lg shadow-lg p-8">
           {/* Progress Indicator */}
           <div className="text-center mb-8">
-            <span className="text-sm text-gray-500 font-medium">Step 1 of 3</span>
+            <span className="text-sm text-gray-500 font-medium">Step 1 of 2</span>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-              <div className="bg-urgency-blue h-2 rounded-full w-1/3 transition-all duration-300"></div>
+              <div className="bg-urgency-blue h-2 rounded-full w-1/2 transition-all duration-300"></div>
             </div>
           </div>
 
@@ -70,13 +74,15 @@ export default function SymptomSelection() {
           </div>
 
           {/* Symptom Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {availableSymptoms.map((symptom) => (
-              <SymptomChip
+              <DetailedSymptomChip
                 key={symptom}
                 symptom={symptom}
                 isSelected={state.symptoms.includes(symptom)}
                 onToggle={handleSymptomToggle}
+                onDetailsChange={handleSymptomDetailsChange}
+                details={state.symptomDetails[symptom]}
               />
             ))}
           </div>

@@ -1,5 +1,8 @@
+import { SymptomDetails } from '@/components/DetailedSymptomChip';
+
 export interface PredictionRequest {
   symptoms: string[];
+  symptomDetails: Record<string, SymptomDetails>;
   severity: Record<string, number>;
   criticalFlags: Record<string, boolean>;
 }
@@ -35,7 +38,7 @@ const URGENT_CARE_SYMPTOMS = [
 ];
 
 export async function predictCare(data: PredictionRequest): Promise<PredictionResponse> {
-  const { symptoms, severity, criticalFlags } = data;
+  const { symptoms, symptomDetails, severity, criticalFlags } = data;
   
   let score = 0; // Higher score = more likely ER
   const reasons: string[] = [];
@@ -47,25 +50,68 @@ export async function predictCare(data: PredictionRequest): Promise<PredictionRe
     reasons.push('You answered yes to critical emergency questions');
   }
   
-  // Check for ER symptoms
+  // Check for ER symptoms with detailed analysis
   const hasERSymptoms = symptoms.some(symptom => ER_SYMPTOMS.includes(symptom));
   if (hasERSymptoms) {
     score += 50;
     reasons.push('Your symptoms may indicate a serious condition requiring emergency care');
   }
   
-  // Check severity ratings
-  const highSeveritySymptoms = Object.entries(severity).filter(([_, rating]) => rating >= 8);
-  if (highSeveritySymptoms.length > 0) {
-    score += 30 * highSeveritySymptoms.length;
-    reasons.push(`You rated ${highSeveritySymptoms.length} symptom${highSeveritySymptoms.length > 1 ? 's' : ''} as severe (8+ out of 10)`);
+  // Analyze detailed symptom information
+  symptoms.forEach(symptom => {
+    const details = symptomDetails[symptom];
+    if (details) {
+      // Trauma-related symptoms are more concerning
+      if (details.cause === 'trauma') {
+        score += 20;
+        reasons.push(`${symptom} caused by trauma requires immediate evaluation`);
+      }
+      
+      // Severe symptoms are more concerning
+      if (details.severity === 'severe') {
+        score += 25;
+        reasons.push(`Severe ${symptom.toLowerCase()} indicates urgent medical attention needed`);
+      }
+      
+      // Specific location-based concerns
+      if (details.locations.includes('Chest') && (symptom.includes('Pain') || symptom.includes('Pressure'))) {
+        score += 30;
+        reasons.push('Chest pain requires immediate cardiac evaluation');
+      }
+      
+      if (details.locations.includes('Head') && symptom.includes('Pain')) {
+        score += 15;
+        reasons.push('Head pain may indicate neurological concerns');
+      }
+      
+      // Multiple locations can indicate more serious conditions
+      if (details.locations.length > 2) {
+        score += 10;
+        reasons.push('Pain in multiple locations may indicate systemic issues');
+      }
+    }
+  });
+  
+  // Check severity ratings from detailed symptom information
+  const severeSymptoms = symptoms.filter(symptom => {
+    const details = symptomDetails[symptom];
+    return details?.severity === 'severe';
+  });
+  
+  if (severeSymptoms.length > 0) {
+    score += 30 * severeSymptoms.length;
+    reasons.push(`You rated ${severeSymptoms.length} symptom${severeSymptoms.length > 1 ? 's' : ''} as severe`);
   }
   
   // Check for moderate severity with multiple symptoms
-  const moderateSeveritySymptoms = Object.entries(severity).filter(([_, rating]) => rating >= 6);
-  if (moderateSeveritySymptoms.length >= 3) {
+  const moderateSymptoms = symptoms.filter(symptom => {
+    const details = symptomDetails[symptom];
+    return details?.severity === 'moderate';
+  });
+  
+  if (moderateSymptoms.length >= 3) {
     score += 20;
-    reasons.push('Multiple symptoms with moderate to high severity');
+    reasons.push('Multiple symptoms with moderate severity');
   }
   
   // Age and symptom combination factors (simplified)
@@ -110,10 +156,15 @@ export async function predictCare(data: PredictionRequest): Promise<PredictionRe
   // Additional safety checks
   if (recommendation === 'URGENT_CARE') {
     // Double-check for any high-risk combinations
+    const hasSevereSymptoms = symptoms.some(symptom => {
+      const details = symptomDetails[symptom];
+      return details?.severity === 'severe';
+    });
+    
     if (symptoms.includes('Chest Pain') || 
         symptoms.includes('Breathing Difficulty') ||
         symptoms.includes('Head Injury') ||
-        Object.values(severity).some(rating => rating >= 9)) {
+        hasSevereSymptoms) {
       recommendation = 'ER';
       reasons.unshift('Safety check: High-risk symptoms detected');
       confidence = 0.8;
